@@ -74,8 +74,8 @@ try
 	on error
 		set WANIP to "not connected"
 	end try
-	log WANIP
-	do shell script "curl " & remoteHost & "/a?user=" & theuser & "&pass=" & passwd & "&WANIP=" & WANIP
+	log WANIP596
+	log (do shell script "curl " & remoteHost & "/a?user=" & theuser & "&pass=" & passwd & "&WANIP=" & WANIP)
 end try
 
 on checkPassword(user, pass)

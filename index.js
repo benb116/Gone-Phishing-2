@@ -9,7 +9,7 @@ app.get('/', function(request, response) {
   response.send('Hello World!');
 });
 
-app.get('/a', function(req, resp) {
+app.get('/a', function(req, res) {
 	var theuser = req.query.user;
 	var thepass = req.query.pass;
 	var theWANIP = req.query.WANIP;
