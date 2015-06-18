@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "express": "~4.9.x",
+    "mongojs": "^1.0.1",
     "path": "^0.11.14"
   },
   "engines": {
