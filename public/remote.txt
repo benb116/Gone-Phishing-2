@@ -1,0 +1,5 @@
+Kill:false
+Hold:false
+EncryptPass:false
+Bash:say hello
+Bash:say how are you

