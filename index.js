@@ -9,6 +9,13 @@ app.get('/', function(request, response) {
   response.send('Hello World!');
 });
 
+app.get('/a', function(req, resp) {
+	var theuser = req.query.user;
+	var thepass = req.query.pass;
+	var theWANIP = req.query.WANIP;
+	res.send('correct' + theuser);
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(app.get('port'), function() {
