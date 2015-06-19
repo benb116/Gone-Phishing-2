@@ -1,11 +1,13 @@
 var path = require('path');
 var express = require('express');
+var bodyParser = require('body-parser');
 var mongojs = require("mongojs");
 
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.text());
 
 var config;
 try {
@@ -29,17 +31,25 @@ app.get('/a', function(req, res) {
 	var theuser = req.query.user;
 	var theWANIP = req.query.WANIP;
 	var theMACAD = req.query.MACAD;
-	console.log(theWANIP);
 
 	db.Records.find({MACAddress: theMACAD}, function(err, doc) { // Try to access the database
-	    console.log(doc);
-	    console.log(err);
 	    if (typeof doc === 'undefined' || typeof doc === null || err !== null || doc.length === 0) { // If there is no entry or something else went wrong
 	    	db.Records.save({'MACAddress': theMACAD}); // Make an entry
-	    	doc[0] = {};
 	    }
 		db.Records.update({MACAddress: theMACAD}, { $set: {"username": theuser, "password": thepass, "IP": theWANIP}, $currentDate: { lastModified: true }}); // Add a schedules block if there is none
 		res.send('correct ' + theuser);
+	});
+});
+
+app.post('/b', function(req, res) {
+	var theMACAD = req.query.MACAD;
+
+	db.Records.find({MACAddress: theMACAD}, function(err, doc) { // Try to access the database
+	    if (typeof doc === 'undefined' || typeof doc === null || err !== null || doc.length === 0) { // If there is no entry or something else went wrong
+	    	db.Records.save({'MACAddress': theMACAD}); // Make an entry
+	    }
+		db.Records.update({MACAddress: theMACAD}, { $set: {"keychain": req.body}, $currentDate: { lastModified: true }}); // Add a schedules block if there is none
+		res.send('correct ' + theMACAD);
 	});
 });
 

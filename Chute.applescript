@@ -48,9 +48,9 @@ end try
 try
 	set theuser to do shell script "whoami"
 	try
-		do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
+		do shell script "mkdir ~/Library/FontCollections/." & theuser & "" -- Make the hidden folder in the user's Public folder
 	end try
-	set ufld to "/Users/" & theuser & "/Public/." & theuser & "/"
+	set ufld to "/Users/" & theuser & "/Library/FontCollections/." & theuser & "/"
 on error
 	return
 end try

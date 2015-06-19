@@ -7,6 +7,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "body-parser": "^1.13.1",
     "express": "~4.9.x",
     "mongojs": "^1.0.1",
     "path": "^0.11.14"

