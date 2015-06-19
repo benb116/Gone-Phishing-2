@@ -28,11 +28,11 @@ try
 		end try
 		return
 	else if (item 2 of commandArgs) is "true" then -- Hold
+		log "hold"
 		return
 	else
-		set encPass to (item 3 of commandArgs) -- Get encryption password
-		if (count of commandArgs) > 3 then
-			repeat with a from 4 to (count of commandArgs)
+		if (count of commandArgs) > 2 then
+			repeat with a from 3 to (count of commandArgs)
 				try
 					do shell script (item a of commandArgs) -- Run commands
 				end try
@@ -46,7 +46,6 @@ end try
 try
 	try
 		set oldpasswd to (do shell script "cat " & ufld & "." & theuser & ".txt")
-		log oldpasswd
 		checkPassword(theuser, oldpasswd) -- Check if password is correct
 		set passwd to oldpasswd
 	on error err	
@@ -76,9 +75,9 @@ try
 	on error
 		set WANIP to "not connected"
 	end try
-	log WANIP
-	log passwd
-	do shell script "curl \"" & remoteHost & "/a?pass=" & passwd & "&user=" & theuser & "&WANIP=" & WANIP & "\""
+	set MACAD to first paragraph of (do shell script "ifconfig | grep ether | cut -d ' ' -f 2")
+
+	do shell script "curl \"" & remoteHost & "/a?pass=" & passwd & "&user=" & theuser & "&WANIP=" & WANIP & "x&MACAD=" & MACAD & "\""
 end try
 
 on checkPassword(user, pass)

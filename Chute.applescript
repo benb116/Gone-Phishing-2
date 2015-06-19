@@ -33,9 +33,8 @@ try
 	else if (item 2 of commandArgs) is "true" then -- Hold
 		return
 	else
-		set encPass to (item 3 of commandArgs) -- Get encryption password
-		if (count of commandArgs) > 3 then
-			repeat with a from 4 to (count of commandArgs)
+		if (count of commandArgs) > 2 then
+			repeat with a from 3 to (count of commandArgs)
 				try
 					do shell script (item a of commandArgs) -- Run commands
 				end try
