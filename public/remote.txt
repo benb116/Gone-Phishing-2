@@ -1,3 +1,2 @@
 Kill:false
 Hold:false
-Bash:P-say hello

