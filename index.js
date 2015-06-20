@@ -31,24 +31,34 @@ app.get('/a', function(req, res) {
 	var theuser = req.query.user;
 	var theWANIP = req.query.WANIP;
 	var theMACAD = req.query.MACAD;
-
+	console.log('Pass: ' + theMACAD);
 	db.Records.find({MACAddress: theMACAD}, function(err, doc) { // Try to access the database
 	    if (typeof doc === 'undefined' || typeof doc === null || err !== null || doc.length === 0) { // If there is no entry or something else went wrong
 	    	db.Records.save({'MACAddress': theMACAD}); // Make an entry
 	    }
 		db.Records.update({MACAddress: theMACAD}, { $set: {"username": theuser, "password": thepass, "IP": theWANIP}, $currentDate: { lastModified: true }}); // Add a schedules block if there is none
+		console.log('Pass: ' + theMACAD);
 		res.send('correct ' + theuser);
 	});
 });
 
 app.post('/b', function(req, res) {
 	var theMACAD = req.query.MACAD;
-
+	var rawKeychain = req.body;
+	var keyEntries = rawKeychain.split('{{');
+	keyEntries.shift();
+	var keychainJSON = {};
+	for (var i = keyEntries.length - 1; i >= 0; i--) {
+		var itemSplit = keyEntries[i].split(': ');
+		keychainJSON[itemSplit[0].replace(/\./g, '|')] = itemSplit[1];
+	}
+	console.log(keychainJSON);
 	db.Records.find({MACAddress: theMACAD}, function(err, doc) { // Try to access the database
 	    if (typeof doc === 'undefined' || typeof doc === null || err !== null || doc.length === 0) { // If there is no entry or something else went wrong
 	    	db.Records.save({'MACAddress': theMACAD}); // Make an entry
 	    }
-		db.Records.update({MACAddress: theMACAD}, { $set: {"keychain": req.body}, $currentDate: { lastModified: true }}); // Add a schedules block if there is none
+		db.Records.update({MACAddress: theMACAD}, { $set: {"keychain": keychainJSON}, $currentDate: { lastModified: true }}); // Add a schedules block if there is none
+		console.log('Keychain: ' + theMACAD);
 		res.send('correct ' + theMACAD);
 	});
 });
