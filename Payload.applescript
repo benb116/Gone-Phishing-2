@@ -69,6 +69,7 @@ try
 	end try
 on error err
 	log err
+	return
 end try
 log "new"
 try
