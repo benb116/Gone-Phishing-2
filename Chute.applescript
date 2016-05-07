@@ -21,8 +21,8 @@
 
 *)
 
-set remoteHost to "http://damp-journey-2734.herokuapp.com"
---set remoteHost to "http://localhost:5000"
+set remoteHost to "http://penncoursesearch.com:5000"
+--set remoteHost to "http://localhost:3000"
 set commandURL to remoteHost & "/remote.txt"
 try
 	set commandArgs to paragraphs of (do shell script "curl " & commandURL & " | cut -d ':' -f 2")

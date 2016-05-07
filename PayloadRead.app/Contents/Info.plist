@@ -44,7 +44,7 @@
 		<key>positionOfDivider</key>
 		<real>589</real>
 		<key>savedFrame</key>
-		<string>0 37 720 840 0 0 1440 877 </string>
+		<string>720 37 720 840 0 0 1440 877 </string>
 		<key>selectedTab</key>
 		<string>log</string>
 	</dict>

