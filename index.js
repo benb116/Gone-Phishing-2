@@ -7,7 +7,7 @@ var fileUpload = require('express-fileupload');
 
 var app = express();
 
-app.set('port', (process.env.PORT || 3000));
+app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 // app.use(bodyParser.text());
 app.use(fileUpload());
